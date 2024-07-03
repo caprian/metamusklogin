@@ -1,34 +1,113 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MetaMask Login Module
 
-## Getting Started
+This MetaMask Login Module is a ReactJS component that enables applications to connect with a MetaMask wallet. It is useful for user authentication and authorization, allowing users to securely log in with their MetaMask wallet.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- **User Authentication**: Authenticate users through their MetaMask wallet.
+- **User Authorization**: Authorize users based on their wallet address.
+- **Easy Integration**: Simple to integrate with any ReactJS application.
+- **Secure**: Utilizes MetaMask for secure login.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Before using this module, ensure you have the following installed:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
+- [MetaMask Extension](https://metamask.io/) installed in your browser
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Installation
 
-## Learn More
+To install the MetaMask Login Module, follow these steps:
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/your-username/metamask-login-module.git
+    ```
+2. **Navigate to the project directory**:
+    ```bash
+    cd metamask-login-module
+    ```
+3. **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+To use the MetaMask Login Module in your ReactJS application, follow these steps:
 
-## Deploy on Vercel
+1. **Import the MetaMaskLogin component**:
+    ```javascript
+    import MetaMaskLogin from './MetaMaskLogin';
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Use the MetaMaskLogin component in your application**:
+    ```javascript
+    function App() {
+        return (
+            <div className="App">
+                <h1>Welcome to My Application</h1>
+                <MetaMaskLogin />
+            </div>
+        );
+    }
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    export default App;
+    ```
+
+3. **MetaMaskLogin Component Implementation**:
+    Here is an example implementation of the `MetaMaskLogin` component:
+    ```javascript
+    import React, { useState, useEffect } from 'react';
+    import Web3 from 'web3';
+
+    const MetaMaskLogin = () => {
+        const [account, setAccount] = useState(null);
+        const [errorMessage, setErrorMessage] = useState(null);
+
+        useEffect(() => {
+            if (window.ethereum) {
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    setAccount(accounts[0]);
+                });
+            }
+        }, []);
+
+        const connectWallet = async () => {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    setAccount(accounts[0]);
+                } catch (error) {
+                    setErrorMessage('Connection to MetaMask failed.');
+                }
+            } else {
+                setErrorMessage('MetaMask is not installed. Please install it to use this app.');
+            }
+        };
+
+        return (
+            <div>
+                <button onClick={connectWallet}>Connect MetaMask</button>
+                {account && <p>Connected Account: {account}</p>}
+                {errorMessage && <p>{errorMessage}</p>}
+            </div>
+        );
+    };
+
+    export default MetaMaskLogin;
+    ```
+
+## Contributing
+
+We welcome contributions! Please fork the repository and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+If you have any questions or need support, please reach out to shashankag20@example.com.
